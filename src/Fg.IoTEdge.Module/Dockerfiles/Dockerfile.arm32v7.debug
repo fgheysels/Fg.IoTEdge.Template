@@ -11,10 +11,10 @@ RUN curl -sSL https://aka.ms/getvsdbgsh | bash /dev/stdin -v latest -l ~/vsdbg
 FROM mcr.microsoft.com/dotnet/core/sdk:6.0-bullseye-slim-arm32v7 AS build-env
 WORKDIR /app
 
-COPY *.csproj ./
+COPY ./../*.csproj ./
 RUN dotnet restore
 
-COPY . ./
+COPY ./../* ./
 RUN dotnet publish -c Debug -o out
 
 FROM base
