@@ -4,6 +4,8 @@ using Microsoft.Azure.Devices.Client;
 #if BackgroundServices
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+#else
+using Microsoft.Azure.Devices.Shared;
 #endif
 using Microsoft.Extensions.Logging;
 
@@ -163,11 +165,11 @@ namespace FgModule
         private static Task OnDesiredPropertiesChanged(TwinCollection desiredProperties, object userContext)
         {
             // Force a restart of the module since configuration has changed.
-            ModuleClientState state = userContext as ILoggerFactory;
+            var state = userContext as ILoggerFactory;
 
             if (state == null)
             {
-                throw new InvalidOperationException("The userContext should contain a ModuleClientState object.");
+                throw new InvalidOperationException("The userContext should contain an ILoggerFactory object.");
             }
 
             var logger = state.LoggerFactory.CreateLogger<Program>();
