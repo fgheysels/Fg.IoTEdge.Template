@@ -13,7 +13,7 @@ namespace FgModule
         /// </summary>
         public LogLevel MinimumLogLevel { get; private set; }
 
-        public Configuration(ILogger logger) : base(logger)
+        public FgModuleConfiguration(ILogger logger) : base(logger)
         {
         }
 
@@ -44,6 +44,6 @@ namespace FgModule
             reportedProperties[MinimumLogLevelProperty] = MinimumLogLevel.ToString();
         }
 
-        protected override string ModuleName => "IoTEdgeModule";
+        protected override string ModuleName => nameof(FgModule);
     }
 }

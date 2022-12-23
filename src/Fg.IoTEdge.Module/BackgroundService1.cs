@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -24,13 +20,13 @@ namespace FgModule
             _hostLifetime.ApplicationStopping.Register(() => _logger.LogInformation("stopping host"));
         }
 
-        protected async override Task ExecuteAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await _moduleClient.SetInputMessageHandlerAsync(Endpoints.Input1, OnMessageReceived, _moduleClient, cancellationToken);
 
             while (!cancellationToken.IsCancellationRequested)
             {
-
+                // TODO: write some long running logic here.
             }
         }
 

@@ -53,19 +53,19 @@ namespace FgModule
                        })
                        .ConfigureServices(services =>
                        {
-                           services.AddSingleton<Configuration>(sp =>
+                           services.AddSingleton<FgModuleConfiguration>(sp =>
                            {
                                var moduleClient = sp.GetService<ModuleClient>();
 
-                               return ModuleConfiguration.CreateFromTwinAsync<Configuration>(
+                               return ModuleConfiguration.CreateFromTwinAsync<FgModuleConfiguration>(
                                                             moduleClient,
-                                                            sp.GetRequiredService<ILogger<Configuration>>())
+                                                            sp.GetRequiredService<ILogger<FgModuleConfiguration>>())
                                                          .GetAwaiter().GetResult();
                            });
                        })
                        .ConfigureLogging(logging =>
                        {
-                           var configuration = logging.Services.BuildServiceProvider().GetService<Configuration>();
+                           var configuration = logging.Services.BuildServiceProvider().GetService<FgModuleConfiguration>();
 
                            LogLevel logLevel = LogLevel.Information;
 
