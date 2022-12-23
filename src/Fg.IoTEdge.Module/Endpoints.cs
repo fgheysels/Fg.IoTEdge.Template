@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
 
-namespace Fg.IoTEdge.Module
+namespace FgModule
 {
     internal static class Endpoints
     {

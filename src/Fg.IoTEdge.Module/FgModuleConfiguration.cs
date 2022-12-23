@@ -2,9 +2,9 @@
 using Microsoft.Azure.Devices.Shared;
 using Microsoft.Extensions.Logging;
 
-namespace Fg.IoTEdge.Module
+namespace FgModule
 {
-    internal class Configuration : ModuleConfiguration
+    internal class FgModuleConfiguration : ModuleConfiguration
     {
         private const string MinimumLogLevelProperty = "LogLevel";
 

@@ -7,7 +7,7 @@ using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
-namespace Fg.IoTEdge.Module
+namespace FgModule
 {
     internal class BackgroundService1 : BackgroundService
     {
