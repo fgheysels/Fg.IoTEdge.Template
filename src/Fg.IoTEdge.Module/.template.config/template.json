@@ -55,6 +55,16 @@
         ],
         "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
         "continueOnError": true
+      },
+      {
+        "description": "Add module project to solution",
+        "manualInstructions": [ { "text": "Add generated project to solution manually." } ],
+        "args": {
+            "solutionFolder": "EdgeModules",
+            "projectFiles": "FgModule.csproj"
+        },
+        "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
+        "continueOnError": true
       }
     ]
   }
