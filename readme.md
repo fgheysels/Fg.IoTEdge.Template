@@ -23,6 +23,10 @@ Afterwards, create a new Fg.IoTEdge.Module project via the CLI:
 dotnet new fgiotedgemodule -n <mymodulename>
 ```
 
+If you execute the above command in the directory where the `.sln` file of the Azure IoT Edge solution exists, then:
+- The new project will be automatically added to the solution
+- The `deployment.template.json` file of the IoT Edge solution will be updated so that the new module is incorporated in the deployment manifest.
+
 The above command provides some parameters:
 
 |parameter|description
