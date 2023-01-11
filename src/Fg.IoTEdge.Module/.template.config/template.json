@@ -2,59 +2,98 @@
     "$schema": "http://json.schemastore.org/template",
     "author": "Frederik Gheysels",
     "classifications": [
-      "Console", "IoT Edge"
+        "Console",
+        "IoT Edge"
     ],
     "name": "Azure IoT Edge Module",
     "identity": "Fg.IoTEdge.Module.CSharp",
     "groupIdentity": "Fg.IoTEdge.Module",
     "shortName": "fgiotedgemodule",
     "tags": {
-      "language": "C#",
-      "type": "project"
+        "language": "C#",
+        "type": "project"
     },
     "sourceName": "FgModule",
     "preferNameDirectory": true,
     "primaryOutputs": [
-      {
-        "path": "."
-      }
+        {
+            "path": "."
+        }
     ],
     "symbols": {
-      "skipRestore": {
-        "type": "parameter",
-        "datatype": "bool",
-        "defaultValue": "false"
-      },
-      "repository": {
-        "type": "parameter",
-        "replaces": "<repository>",
-        "defaultValue": "$REGISTRY_ADDRESS"
-      }
+        "skipRestore": {
+            "type": "parameter",
+            "datatype": "bool",
+            "defaultValue": "false"
+        },
+        "repository": {
+            "type": "parameter",
+            "replaces": "<repository>",
+            "defaultValue": "$REGISTRY_ADDRESS"
+        },
+        "no-backgroundservices": {
+            "type": "parameter",
+            "datatype": "bool",
+            "defaultValue": "false",
+            "description": "Do not generate an IoT Edge module with DI and background-services support"
+        },
+        "BackgroundServices": {
+            "type": "computed",
+            "value": "!(no-backgroundservices)"
+        }
     },
     "sources": [
-      {
-        "exclude": [
-          ".template.config/**/*",
-          "**/[Bb]in/**",
-          "**/[Oo]bj/**",
-          "**/.vs/**",
-          "**/.user/**",
-          "**/*.lock.json",
-          "**/*.filelist"
-        ]
-      }
+        {
+            "exclude": [
+                ".template.config/**/*",
+                "**/[Bb]in/**",
+                "**/[Oo]bj/**",
+                "**/.vs/**",
+                "**/.user/**",
+                "**/*.lock.json",
+                "**/*.filelist"
+                // "AddModuleToDeploymentManifest.ps1"
+            ],
+            "modifiers": [
+                {
+                  "condition": "!(BackgroundServices)",
+                  "exclude": [
+                    "BackgroundService1.cs"
+                  ]
+                }
+              ]
+        }
     ],
-    "postActions": [
-      {
-        "condition": "(!skipRestore)",
-        "description": "Restore NuGet packages required by this project.",
-        "manualInstructions": [
-          {
-            "text": "Run 'dotnet restore'"
-          }
-        ],
-        "actionId": "210D431B-A78B-4D2F-B762-4ED3E3EA9025",
-        "continueOnError": true
-      }
+    "postActions": [        
+        {
+            "description": "Add module project to solution",
+            "manualInstructions": [
+                {
+                    "text": "Add generated project to solution manually."
+                }
+            ],
+            "args": {
+                "solutionFolder": "EdgeModules",
+                "projectFiles": "FgModule.csproj"
+            },
+            "actionId": "D396686C-DE0E-4DE6-906D-291CD29FC5DE",
+            "continueOnError": true
+        },
+        {
+            "description": "Add the IoT Edge module to the deployment.template.json file",
+            "actionId": "3A7C4B45-1F5D-4A30-959A-51B88E82B5D2",
+            "args": {
+                "executable": "pwsh",
+                "args": "-File AddModuleToDeploymentManifest.ps1",
+                "redirectStandardOutput": false,
+                "redirectStandardError": false
+            },                             
+            "continueOnError": false,
+            "manualInstructions": [
+                {
+                "text": "Add the new IoT Edge module to the deployment.template.json file manually."
+                }
+            ]            
+        }
     ]
-  }
+}
