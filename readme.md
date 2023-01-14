@@ -31,5 +31,5 @@ The above command provides some parameters:
 
 |parameter|description
 |-|-|
-|repository|The address of the image container repository
+|repository|The address of the image container repository.  If not specified, the `module.json` file specifies the repository as a variable that can be set / replaced during deployment.
 |no-backgroundservices|Specifies that a module must be generated which does not make use of hosted background-services.  (Default: false)
