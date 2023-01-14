@@ -1,4 +1,5 @@
 ﻿using System.Text;
+using Fg.IoTEdgeModule;
 using Microsoft.Azure.Devices.Client;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
@@ -23,6 +24,8 @@ namespace FgModule
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
             await _moduleClient.SetInputMessageHandlerAsync(Endpoints.Input1, OnMessageReceived, _moduleClient, cancellationToken);
+
+            await BackgroundServiceWaitHandle.WaitForSignalAsync();
 
             while (!cancellationToken.IsCancellationRequested)
             {

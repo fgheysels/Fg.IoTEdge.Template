@@ -52,7 +52,6 @@
                 "**/.user/**",
                 "**/*.lock.json",
                 "**/*.filelist"
-                // "AddModuleToDeploymentManifest.ps1"
             ],
             "modifiers": [
                 {
@@ -60,6 +59,12 @@
                   "exclude": [
                     "BackgroundService1.cs"
                   ]
+                },
+                {
+                    "condition": "BackgroundServices",
+                    "exclude": [
+                        "ModuleState.cs"
+                    ]
                 }
               ]
         }

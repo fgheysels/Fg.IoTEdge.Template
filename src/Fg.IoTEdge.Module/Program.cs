@@ -8,6 +8,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Azure.Devices.Shared;
 #endif
 using Microsoft.Extensions.Logging;
+using System.Text;
 
 namespace FgModule
 {
@@ -31,7 +32,7 @@ namespace FgModule
 
                 logger.LogInformation("FgModule started");
                 Endpoints.ReportEndpoints(logger);
-                //BackgroundServiceWaitHandle.SetSignal();
+                BackgroundServiceWaitHandle.SetSignal();
 
                 await host.WaitForShutdownAsync(_shutdownHandler.CancellationTokenSource.Token);
 
@@ -160,6 +161,37 @@ namespace FgModule
         private static async Task ConfigureDirectMethodHandlersAsync(ModuleClient ioTHubModuleClient, ILoggerFactory loggerFactory)
         {
             await ioTHubModuleClient.SetDesiredPropertyUpdateCallbackAsync(OnDesiredPropertiesChanged, loggerFactory);
+
+            var state = new ModuleState(ioTHubModuleClient, loggerFactory.CreateLogger("PipeMessage"));
+
+            await ioTHubModuleClient.SetInputMessageHandlerAsync("input1", PipeMessage, state);
+        }
+
+        private static async Task<MessageResponse> PipeMessage(Message message, object state)
+        {
+            var moduleState = state as ModuleState;
+            if (moduleState == null)
+            {
+                throw new ArgumentException("state should contain an instance of ModuleState", nameof(state));
+            }
+
+            byte[] messageBytes = message.GetBytes();
+            string messageString = Encoding.UTF8.GetString(messageBytes);
+
+            if (!string.IsNullOrEmpty(messageString))
+            {
+                using (var pipeMessage = new Message(messageBytes))
+                {
+                    foreach (var prop in message.Properties)
+                    {
+                        pipeMessage.Properties.Add(prop.Key, prop.Value);
+                    }
+                    await moduleState.ModuleClient.SendEventAsync("output1", pipeMessage);
+
+                    moduleState.Logger.LogInformation("Received message sent");
+                }
+            }
+            return MessageResponse.Completed;
         }
 
         private static Task OnDesiredPropertiesChanged(TwinCollection desiredProperties, object userContext)
@@ -172,7 +204,7 @@ namespace FgModule
                 throw new InvalidOperationException("The userContext should contain an ILoggerFactory object.");
             }
 
-            var logger = state.LoggerFactory.CreateLogger<Program>();
+            var logger = state.CreateLogger<Program>();
 
             logger.LogInformation("Desired properties have changed - initiating a restart of the FgModule module.");
 
