@@ -4,7 +4,7 @@ namespace FgModule
 {
     internal static class Endpoints
     {
-        internal const string Input1 = "Input1";
+        internal const string Input1 = "input1";
 
         internal static void ReportEndpoints(ILogger logger)
         {
